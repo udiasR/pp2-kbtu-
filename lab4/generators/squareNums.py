@@ -6,3 +6,5 @@ def squares(l, r):
         yield i ** 2
 
 print(*squares(l, r), sep=', ')
+
+25, 36, 49, 64, 81, 100
