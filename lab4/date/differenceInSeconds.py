@@ -21,4 +21,4 @@ time2 = datetime.datetime(year_2, month_2, day_2, hour_2, min_2, sec_2, msec_2)
 
 time_diff = abs(time1 - time2)
 
-print(time_diff.total_seconds())
+print(time_diff.total_seconds())       #converts days, hours, minutes, and seconds into a single float value.
