@@ -7,3 +7,7 @@ def check_access(path):
     print("Executable:", os.access(path, os.X_OK))
 
 check_access(r"/home/hp/Documents/pp2-kbtu-/lab7")
+
+
+# chmod 777 file.txt
+# ls -l filename
