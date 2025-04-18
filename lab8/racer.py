@@ -53,7 +53,6 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
-#added class Coin for coin to appear and to count the number of coins
 c1,c2,c3,c4,c5 = False, False, False, False, False
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
@@ -145,15 +144,15 @@ def game_over_screen():
                 pygame.quit()
                 sys.exit()
             elif event.type == KEYDOWN:
-                if event.key == K_SPACE:  # Продолжить игру при нажатии на пробел
+                if event.key == K_SPACE:  
                     return True
-                elif event.key == K_ESCAPE:  # Закончить игру при нажатии на ESC
+                elif event.key == K_ESCAPE:  
                     return False
 
 def handle_crash():
     time.sleep(2)
 
-background_y = 0  # Initialize background y-coordinate
+background_y = 0 
 
 while True:
     for event in pygame.event.get():
@@ -163,17 +162,14 @@ while True:
             pygame.quit()
             sys.exit()
 
-    # If there is a collision between a player and an enemy
     if pygame.sprite.spritecollideany(P1, enemies):
         continue_game = handle_crash()
         if not continue_game:
             pygame.quit()
             sys.exit()
 
-    # Scroll the background
     background_y = (background_y + SPEED) % background.get_height()
 
-    # Draw the background at the calculated position
     screen.blit(background, (0, background_y))
     screen.blit(background, (0, background_y - background.get_height()))
 
@@ -183,26 +179,24 @@ while True:
     coins = font_small.render(str(COINS), True, BLACK)
     screen.blit(coins, (370, 10))
 
-    # Moves and Re-draws all Sprites
+ 
     for entity in all_sprites:
         screen.blit(entity.image, entity.rect)
 
-        # Increase the number of coins if collision with player happened
+       
         if entity == C1:
             if pygame.sprite.spritecollideany(P1, coinss):
                 entity.move()
         else:
             entity.move()
 
-    # Move the second random car
     for enemy in enemies:
         enemy.move()
 
-    # Move the coins
+    
     for coin in coinss:
         coin.rect.y += SPEED
 
-        # Respawn coins if they go off-screen
         if coin.rect.top > SCREEN_HEIGHT:
             coin.rect.y = -coin.rect.height
             coin.rect.x = random.randint(40, SCREEN_WIDTH - 40)
