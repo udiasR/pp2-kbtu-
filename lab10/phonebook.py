@@ -2,29 +2,35 @@ import psycopg2
 import csv
 import pandas as pd
 from tabulate import tabulate 
+from config import host,user,password,database 
 
-conn = psycopg2.connect(host="localhost", dbname = "lab10", user = "postgres",
-                        password = "Almaty250505", port = 5433)
+conn =psycopg2.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )
 
 cur = conn.cursor()
+cur.execute("DROP TABLE IF EXISTS phonebook")
 
-cur.execute("""CREATE TABLE IF NOT EXISTS phonebook (
-      user_id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      surname VARCHAR(255) NOT NULL, 
-      phone VARCHAR(255) NOT NULL
+cur.execute("""CREATE TABLE IF NOT EXISTS account (
+      account_id SERIAL PRIMARY KEY,
+      iin VARCHAR(255) NOT NULL,
+      balance VARCHAR(255) NOT NULL, 
+      created_at VARCHAR(255) NOT NULL
 
 )
 """)
-#filepath = "/Users/bekzatshaiyrgozha/Documents/PP2/lab10/student.csv"  
-#with open(filepath, 'r') as f:
+# filepath = "/home/hp/Documents/pp2-kbtu-/lab10/student.csv" 
+# with open(filepath, 'r') as f:
    
-#    next(f)
-#    reader = csv.reader(f)
-#    for row in reader:
-#        cur.execute("INSERT INTO phonebook (name, surname, phone) VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
+#     next(f)
+#     reader = csv.reader(f)
+#     for row in reader:
+#         cur.execute("INSERT INTO phonebook (name, surname, phone) VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
 
-#conn.commit()
+# conn.commit()
 
 
 check = True
@@ -69,7 +75,7 @@ while check:
                 name_var = str(input("Name: "))
                 surname_var = str(input("Surname: "))
                 phone_var = str(input("Phone: "))
-                cur.execute("INSERT INTO phonebook (name, surname, phone) VALUES (%s, %s, %s)", (name_var, surname_var, phone_var))
+                cur.execute("INSERT INTO account (name, surname, phone) VALUES (%s, %s, %s)", (name_var, surname_var, phone_var))
                 conn.commit()
                 back_com = str(input('Type "back" in order to return to the list of the commands: '))
                 if back_com == "back":
@@ -81,7 +87,7 @@ while check:
                     reader = csv.reader(f)
                     next(reader)
                     for row in reader:
-                        cur.execute("INSERT INTO phonebook (name, surname, phone) VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
+                        cur.execute("INSERT INTO account (name, surname, phone) VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
                 conn.commit()
 
                     
@@ -176,9 +182,9 @@ while check:
         if command == "s" or command == "S":
             back = False
             command = ''
-            cur.execute("SELECT * from phonebook;")
+            cur.execute("SELECT * from account;")
             rows = cur.fetchall()
-            print(tabulate(rows, headers=["ID", "Name", "Surname", "Phone"], tablefmt='fancy_grid'))
+            print(tabulate(rows, headers=["account_id", "iin", "balance", "isactive","created_at"], tablefmt='fancy_grid'))
             back_com = str(input('Type "back" in order to return to the list of the commands: '))
             if back_com == "back":
                 back = True
@@ -186,8 +192,67 @@ while check:
         if command == "f" or command == "F":
             command = ''
             check = False
+
+        # else:
+        #     command = ''
+        #     check = False
+
         
 
 conn.commit()
 cur.close()
 conn.close()
+
+
+
+
+
+# UPDATE phonebook 
+# SET phone = '8' || SUBSTRING(phone FROM 3)
+# WHERE phone LIKE '+7%'
+
+
+
+#    SELECT id, name, phone 
+#     FROM phonebook 
+#    WHERE phone LIKE '%707%'
+
+
+
+# start_digit = input("Введите цифру, с которой начинаются номера (например 7): ")
+# cur.execute("SELECT phone FROM phonebook WHERE phone LIKE %s", (f"{start_digit}%",))
+# print(f"\nНомера, начинающиеся на {start_digit}:")
+# for row in cur.fetchall():
+#     print(row[0])
+
+#             # 2. Удалить номера короче 5 символов
+# cur.execute("DELETE FROM phonebook WHERE LENGTH(phone) < 5")
+# deleted_count = cur.rowcount
+# print(f"\nУдалено {deleted_count} номеров короче 5 цифр")
+
+
+
+# BEGIN;
+
+# -- 1. Показать номера, начинающиеся на 7
+# SELECT id, phone 
+# FROM phonebook 
+# WHERE phone LIKE '7%';
+
+# -- 2. Удалить короткие номера
+# DELETE FROM phonebook 
+# WHERE LENGTH(phone) < 5;
+
+# -- 3. Заменить маленькие номера
+# UPDATE phonebook
+# SET phone = '555555'
+# WHERE CAST(phone AS BIGINT) < 1000;
+
+# COMMIT;
+
+
+
+# SELECT COUNTRY, count(*) as NUMBER fROM CUSTOMERS GROUP BY COUNTRY
+
+
+# SELECT * FROM ACTOR ORDER BY  FIRST_NAME 

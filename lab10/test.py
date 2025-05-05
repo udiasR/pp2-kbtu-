@@ -1,7 +1,12 @@
 import psycopg2
+from config import host,user,password,database
  
-conn = psycopg2.connect(host="localhost", dbname="lab10", user="postgres",
-                        password="Almaty250505", port=5433)   
+conn =psycopg2.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )    
  
 cur = conn.cursor()
  
@@ -13,4 +18,4 @@ cur.execute("""CREATE TABLE if not exists snake(
             score INTEGER
 );
            """)
-#conn.commit()
+conn.commit()

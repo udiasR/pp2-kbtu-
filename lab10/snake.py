@@ -2,6 +2,7 @@ import pygame
 import sys 
 import random 
 import psycopg2 
+from config import host,user,password,database 
  
 pygame.init() 
  
@@ -26,18 +27,28 @@ fps = pygame.time.Clock()
 paused = False 
 
 def insert_score(name, score, level): 
-    conn = psycopg2.connect(dbname='lab10', user='postgres', password='Almaty250505', host='localhost', port='5433') 
+    conn =psycopg2.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    ) 
     cur = conn.cursor() 
-    insert_query = "INSERT INTO snake_game_scores (player_name, score, level) VALUES (%s, %s, %s)" 
+    insert_query = "INSERT INTO snake (name, score, level) VALUES (%s, %s, %s)"
     cur.execute(insert_query, (name, score, level)) 
     conn.commit() 
     cur.close() 
     conn.close() 
  
 def get_scores(name): 
-    conn = psycopg2.connect(dbname='lab10', user='postgres', password='Almaty250505', host='localhost', port='5433') 
+    conn =psycopg2.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )
     cur = conn.cursor() 
-    query = "SELECT score, level FROM snake_game_scores WHERE player_name = %s ORDER BY score DESC" 
+    query = "SELECT score, level FROM snake WHERE name = %s ORDER BY score DESC"
     cur.execute(query, (name,)) 
     results = cur.fetchall() 
     cur.close() 
